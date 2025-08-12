@@ -1,0 +1,2089 @@
+$ python main.py
+/Users/sid/workspace/utaustin/utaustin-aih/A8/main.py:11: LangChainDeprecationWarning: As of langchain-core 0.3.0, LangChain uses pydantic v2 internally. The langchain_core.pydantic_v1 module was a compatibility shim for pydantic v1, and should no longer be used. Please update the code to import from Pydantic directly.
+
+For example, replace imports like: `from langchain_core.pydantic_v1 import BaseModel`
+with: `from pydantic import BaseModel`
+or the v1 compatibility namespace if you are working in a code base that has not been fully upgraded to pydantic 2 yet. from pydantic.v1 import BaseModel
+
+from knowledge_graph import populate_knowledge_graph, create_graph_rag_chain
+/Users/sid/workspace/utaustin/utaustin-aih/A8/knowledge_graph.py:15: LangChainDeprecationWarning: The class `Neo4jGraph` was deprecated in LangChain 0.3.8 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-neo4j package and should be used instead. To use it run `pip install -U :class:`~langchain-neo4j` and import as `from :class:`~langchain_neo4j import Neo4jGraph``.
+graph = Neo4jGraph()
+--- Step 1: Loading Data ---
+Dataset already downloaded.
+Parsing clinical notes from individual patient FHIR files...
+Processing patient files: 100%|█████████████████████████| 111/111 [00:02<00:00, 37.88it/s]
+
+Successfully curated and processed data for 111 patients.
+page_content='
+1964-08-03
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 1 year-old nonhispanic white female.
+
+# Social History
+
+Patient has never smoked.
+
+Patient comes from a middle socioeconomic background.
+
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+## Plan
+
+The patient was placed on a careplan:
+
+- self-care interventions (procedure)
+
+--- Next Clinical Note ---
+
+1964-08-13
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 1 year-old nonhispanic white female.
+
+# Social History
+
+Patient has never smoked.
+
+Patient comes from a middle socioeconomic background.
+
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with allergic disposition (finding), latex (substance), mold (organism), house dust mite (organism), animal dander (substance), lisinopril, cow's milk (substance), peanut (substance).
+
+## Plan
+
+--- Next Clinical Note ---
+
+1966-01-18
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 2 year-old nonhispanic white female.
+
+# Social History
+
+Patient has never smoked.
+
+Patient comes from a middle socioeconomic background.
+
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+house dust mite (organism), animal dander (substance), lisinopril, cow's milk (substance), allergic disposition (finding), peanut (substance), mold (organism), latex (substance)
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+## Plan
+
+The patient was prescribed the following medications:
+
+- chlorpheniramine maleate 2 mg/ml oral solution
+
+--- Next Clinical Note ---
+
+1976-07-12
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 13 year-old nonhispanic white female.
+
+# Social History
+
+Patient has never smoked.
+
+Patient comes from a middle socioeconomic background.
+
+Patient currently has Medicaid.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+## Plan
+
+The patient was placed on a careplan:
+
+- weight management program (regime/therapy)
+
+--- Next Clinical Note ---
+
+1981-08-10
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 18 year-old nonhispanic white female.
+
+# Social History
+
+Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with only received primary school education (finding).
+
+## Plan
+
+--- Next Clinical Note ---
+
+1987-01-31
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 23 year-old nonhispanic white female.
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has Medicaid.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with past pregnancy history of miscarriage (situation).
+
+## Plan
+
+--- Next Clinical Note ---
+
+1994-11-14
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 31 year-old nonhispanic white female.
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has Medicaid.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+## Plan
+
+The patient was placed on a careplan:
+
+- routine antenatal care (regime/therapy)
+
+--- Next Clinical Note ---
+
+2013-06-17
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 50 year-old nonhispanic white female.
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with full-time employment (finding).
+
+## Plan
+
+--- Next Clinical Note ---
+
+2014-02-05
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 50 year-old nonhispanic white female. Patient has a history of full-time employment (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with chronic pain (finding), chronic low back pain (finding), chronic neck pain (finding).
+
+## Plan
+
+--- Next Clinical Note ---
+
+2014-07-14
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 51 year-old nonhispanic white female. Patient has a history of full-time employment (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+Patient is presenting with loss of teeth (disorder).
+
+## Plan
+
+--- Next Clinical Note ---
+
+2015-06-29
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 52 year-old nonhispanic white female. Patient has a history of full-time employment (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+No Active Medications.
+
+# Assessment and Plan
+
+## Plan
+
+The patient was prescribed the following medications:
+
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2016-07-04
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 53 year-old nonhispanic white female. Patient has a history of full-time employment (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]
+
+# Assessment and Plan
+
+Patient is presenting with medication review due (situation), stress (finding), reports of violence in the environment (finding), gingivitis (disorder).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- assessment of health and social care needs (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+- depression screening using patient health questionnaire nine item score (procedure)
+- assessment of substance use (procedure)
+- assessment using alcohol use disorders identification test - consumption (procedure)
+- patient referral for dental care (procedure)
+  The following lab reports were completed:
+- lipid panel with direct ldl - serum or plasma
+- patient health questionnaire 2 item (phq-2) [reported]
+- phq-9 quick depression assessment panel [reported.phq]
+- alcohol use disorder identification test - consumption [audit-c]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2016-07-18
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 53 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental care (regime/therapy)
+- removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)
+- removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)
+- examination of gingivae (procedure)
+- dental fluoride treatment (procedure)
+- oral health education (procedure)
+  The patient was prescribed the following medications:
+- sodium fluoride 0.0272 mg/mg oral gel
+
+--- Next Clinical Note ---
+
+2017-07-10
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 54 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with prediabetes (finding), anemia (disorder), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- assessment of health and social care needs (procedure)
+- assessment of anxiety (procedure)
+- assessment of substance use (procedure)
+- assessment using alcohol use disorders identification test - consumption (procedure)
+- patient referral for dental care (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- generalized anxiety disorder 7 item (gad-7)
+- alcohol use disorder identification test - consumption [audit-c]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+  The patient was placed on a careplan:
+- diabetes self management plan (record artifact)
+
+--- Next Clinical Note ---
+
+2017-07-17
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 54 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- peripheral blood smear interpretation (procedure)
+- review of systems (procedure)
+- medication reconciliation (procedure)
+- brief general examination (procedure)
+  The following lab reports were completed:
+- cbc panel - blood by automated count
+
+--- Next Clinical Note ---
+
+2017-07-31
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 54 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental care (regime/therapy)
+- removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)
+- removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)
+- examination of gingivae (procedure)
+- dental fluoride treatment (procedure)
+- oral health education (procedure)
+  The patient was prescribed the following medications:
+- sodium fluoride 0.0272 mg/mg oral gel
+
+--- Next Clinical Note ---
+
+2018-06-24
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 55 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- colonoscopy (procedure)
+
+--- Next Clinical Note ---
+
+2018-07-16
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 55 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- assessment of health and social care needs (procedure)
+- assessment of anxiety (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- generalized anxiety disorder 7 item (gad-7)
+- patient health questionnaire 2 item (phq-2) [reported]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2019-07-22
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 56 year-old nonhispanic white female. Patient has a history of medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with part-time employment (finding).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- assessment of health and social care needs (procedure)
+- assessment of anxiety (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- lipid panel with direct ldl - serum or plasma
+- generalized anxiety disorder 7 item (gad-7)
+- patient health questionnaire 2 item (phq-2) [reported]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2020-07-27
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 57 year-old nonhispanic white female. Patient has a history of part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with reports of violence in the environment (finding).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- medication reconciliation (procedure)
+- assessment of health and social care needs (procedure)
+- assessment of anxiety (procedure)
+- screening for domestic abuse (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+- assessment of substance use (procedure)
+- screening for drug abuse (procedure)
+- patient referral for dental care (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- cbc panel - blood by automated count
+- generalized anxiety disorder 7 item (gad-7)
+- humiliation, afraid, rape, and kick questionnaire [hark]
+- patient health questionnaire 2 item (phq-2) [reported]
+- drug abuse screening test-10 [dast-10]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2020-08-10
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 57 year-old nonhispanic white female. Patient has a history of part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with gingival disease (disorder).
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental care (regime/therapy)
+- removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)
+- removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)
+- dental plain x-ray bitewing (procedure)
+- examination of gingivae (procedure)
+- dental surgical procedure (procedure)
+- dental application of desensitizing medicament (procedure)
+- gingivectomy or gingivoplasty, per tooth (procedure)
+- postoperative care for dental procedure (regime/therapy)
+- dental fluoride treatment (procedure)
+- oral health education (procedure)
+  The patient was prescribed the following medications:
+- sodium fluoride 0.0272 mg/mg oral gel
+
+--- Next Clinical Note ---
+
+2021-08-02
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with medication review due (situation), full-time employment (finding), stress (finding).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- medication reconciliation (procedure)
+- assessment of health and social care needs (procedure)
+- screening for domestic abuse (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+- assessment of substance use (procedure)
+- assessment using alcohol use disorders identification test - consumption (procedure)
+- patient referral for dental care (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- humiliation, afraid, rape, and kick questionnaire [hark]
+- patient health questionnaire 2 item (phq-2) [reported]
+- alcohol use disorder identification test - consumption [audit-c]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2021-08-09
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with acute viral pharyngitis (disorder).
+
+## Plan
+
+The following procedures were conducted:
+
+- throat culture (procedure)
+
+--- Next Clinical Note ---
+
+2021-08-16
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental care (regime/therapy)
+- removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)
+- removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)
+- dental plain x-ray bitewing (procedure)
+- examination of gingivae (procedure)
+- dental fluoride treatment (procedure)
+- oral health education (procedure)
+  The patient was prescribed the following medications:
+- sodium fluoride 0.0272 mg/mg oral gel
+
+--- Next Clinical Note ---
+
+2021-10-18
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+Patient was given the following immunizations: covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose.
+
+--- Next Clinical Note ---
+
+2021-11-08
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+Patient was given the following immunizations: covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose.
+
+--- Next Clinical Note ---
+
+2022-04-14
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 58 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with viral sinusitis (disorder).
+
+## Plan
+
+--- Next Clinical Note ---
+
+2022-08-08
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 59 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with medication review due (situation), reports of violence in the environment (finding).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- assessment of health and social care needs (procedure)
+- screening for domestic abuse (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- lipid panel with direct ldl - serum or plasma
+- humiliation, afraid, rape, and kick questionnaire [hark]
+- patient health questionnaire 2 item (phq-2) [reported]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2023-06-25
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 60 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- colonoscopy (procedure)
+
+--- Next Clinical Note ---
+
+2023-08-03
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 60 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental plain x-ray bitewing (procedure)
+- take oral or dental impression (procedure)
+
+--- Next Clinical Note ---
+
+2023-08-14
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 60 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with social isolation (finding).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free.
+The following procedures were conducted:
+
+- medication reconciliation (procedure)
+- assessment of health and social care needs (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+- assessment of substance use (procedure)
+- assessment using alcohol use disorders identification test - consumption (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- patient health questionnaire 2 item (phq-2) [reported]
+- alcohol use disorder identification test - consumption [audit-c]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+
+--- Next Clinical Note ---
+
+2023-08-17
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 60 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- fitting of denture (procedure)
+
+--- Next Clinical Note ---
+
+2024-07-16
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), part-time employment (finding), medication review due (situation), reports of violence in the environment (finding), full-time employment (finding), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with fracture of bone (disorder), fracture of ankle (disorder).
+
+## Plan
+
+The following procedures were conducted:
+
+- plain x-ray of ankle region (procedure)
+- bone immobilization (procedure)
+- bone density scan (procedure)
+  The patient was prescribed the following medications:
+- naproxen sodium 220 mg oral tablet
+  The patient was placed on a careplan:
+- fracture care (regime/therapy)
+
+--- Next Clinical Note ---
+
+2024-08-19
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with medication review due (situation), ischemic heart disease (disorder).
+
+## Plan
+
+Patient was given the following immunizations: influenza, seasonal, injectable, preservative free, td (adult), 5 lf tetanus toxoid, preservative free, adsorbed.
+The following procedures were conducted:
+
+- medication reconciliation (procedure)
+- assessment of health and social care needs (procedure)
+- assessment of anxiety (procedure)
+- depression screening (procedure)
+- depression screening (procedure)
+- patient referral for dental care (procedure)
+  The following lab reports were completed:
+- basic metabolic panel - blood
+- generalized anxiety disorder 7 item (gad-7)
+- patient health questionnaire 2 item (phq-2) [reported]
+  The patient was prescribed the following medications:
+- acetaminophen 325 mg oral tablet [tylenol]
+- clopidogrel 75 mg oral tablet
+- simvastatin 20 mg oral tablet
+- 24 hr metoprolol succinate 100 mg extended release oral tablet
+- nitroglycerin 0.4 mg/actuat mucosal spray
+
+--- Next Clinical Note ---
+
+2024-09-02
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- dental consultation and report (procedure)
+- dental care (regime/therapy)
+- removal of supragingival plaque and calculus from all teeth using dental instrument (procedure)
+- removal of subgingival plaque and calculus from all teeth using dental instrument (procedure)
+- examination of gingivae (procedure)
+- oral health education (procedure)
+
+--- Next Clinical Note ---
+
+2024-09-09
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+--- Next Clinical Note ---
+
+2024-09-09
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- referral to cardiology service (procedure)
+
+--- Next Clinical Note ---
+
+2024-09-15
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with abnormal findings diagnostic imaging heart+coronary circulat (finding).
+
+## Plan
+
+The following procedures were conducted:
+
+- consultation for treatment (procedure)
+- angiography of coronary artery (procedure)
+- post anesthesia care management (procedure)
+- referral to cardiac surgery service (procedure)
+
+--- Next Clinical Note ---
+
+2024-09-20
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- pre-surgery testing (procedure)
+- blood group typing (procedure)
+- electrocardiographic procedure (procedure)
+- plain x-ray of chest (procedure)
+- echocardiography (procedure)
+- notification of treatment plan (procedure)
+- scheduling (procedure)
+  The following lab reports were completed:
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- troponin i.cardiac panel - serum or plasma by high sensitivity method
+- urinalysis complete panel - urine
+- heart failure tracking panel
+
+--- Next Clinical Note ---
+
+2024-09-24
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+Patient is presenting with history of coronary artery bypass grafting (situation).
+
+## Plan
+
+The following procedures were conducted:
+
+- insertion of catheter into artery (procedure)
+- administration of anesthesia for procedure (procedure)
+- intubation (procedure)
+- pulmonary catheterization with swan-ganz catheter (procedure)
+- preparation of patient for procedure (regime/therapy)
+- median sternotomy (procedure)
+- off-pump coronary artery bypass (procedure)
+- documentation procedure (procedure)
+  The following lab reports were completed:
+- gas panel - arterial blood
+- gas panel - venous blood
+  The patient was prescribed the following medications:
+- cefazolin 2000 mg injection
+- 1 ml heparin sodium, porcine 5000 unt/ml injection
+- 25 ml protamine sulfate (usp) 10 mg/ml injection
+- 2 ml ondansetron 2 mg/ml injection
+- midazolam 1 mg/ml injectable solution
+- 100 ml propofol 10 mg/ml injection
+- rocuronium bromide 10 mg/ml injectable solution
+- sevoflurane 1000 mg/ml inhalation solution
+- remifentanil 2 mg injection
+
+--- Next Clinical Note ---
+
+2024-09-24
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; sodium fluoride 0.0272 mg/mg oral gel
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- removal of endotracheal tube (procedure)
+- electrocardiographic procedure (procedure)
+- plain x-ray of chest (procedure)
+- transfusion of packed red blood cells (procedure)
+- electrocardiographic procedure (procedure)
+- plain x-ray of chest (procedure)
+- transfusion of packed red blood cells (procedure)
+- electrocardiographic procedure (procedure)
+- plain x-ray of chest (procedure)
+- transfusion of packed red blood cells (procedure)
+- transfusion of fresh frozen plasma (procedure)
+- electrocardiographic procedure (procedure)
+- plain x-ray of chest (procedure)
+- transfusion of packed red blood cells (procedure)
+- discharge to ward (procedure)
+  The following lab reports were completed:
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+- cbc panel - blood by automated count
+- comprehensive metabolic 2000 panel - serum or plasma
+- pt panel - platelet poor plasma by coagulation assay
+- gas panel - arterial blood
+- lipid panel with direct ldl - serum or plasma
+
+--- Next Clinical Note ---
+
+2024-09-28
+
+# Chief Complaint
+
+No complaints.
+
+# History of Present Illness
+
+Belen306 is a 61 year-old nonhispanic white female. Patient has a history of gingival disease (disorder), fracture of ankle (disorder), medication review due (situation), unemployed (finding), acute viral pharyngitis (disorder), victim of intimate partner abuse (finding), viral sinusitis (disorder), fracture of bone (disorder), part-time employment (finding), reports of violence in the environment (finding), full-time employment (finding), gingivitis (disorder), stress (finding), social isolation (finding).
+
+# Social History
+
+Patient is single. Patient has never smoked.
+Patient identifies as bisexual.
+
+Patient comes from a middle socioeconomic background.
+Patient did not finish high school.
+Patient currently has NO INSURANCE.
+
+# Allergies
+
+No Known Allergies.
+
+# Medications
+
+midazolam 1 mg/ml injectable solution; 100 ml propofol 10 mg/ml injection; remifentanil 2 mg injection; rocuronium bromide 10 mg/ml injectable solution; 1 ml heparin sodium, porcine 5000 unt/ml injection; 25 ml protamine sulfate (usp) 10 mg/ml injection; 2 ml ondansetron 2 mg/ml injection; naproxen sodium 220 mg oral tablet; acetaminophen 325 mg oral tablet [tylenol]; cefazolin 2000 mg injection; sodium fluoride 0.0272 mg/mg oral gel; sevoflurane 1000 mg/ml inhalation solution
+
+# Assessment and Plan
+
+## Plan
+
+The following procedures were conducted:
+
+- postoperative procedure education (procedure)
+- walking exercise test (procedure)
+- stair-climbing test (procedure)
+- discharge from hospital (procedure)
+  ' metadata={'patient_id': 'f4e9b2c8-9db5-5597-a6a7-1215a638c1e2'}
+
+--- Step 2: Initializing Models ---
+--- Using Local HuggingFace Embeddings for this run ---
+
+--- Step 3: Populating Knowledge Graph ---
+Populating Knowledge Graph... This may take a while.
+
+Processing 111 documents with up to 10 workers...
+Processing document 7/111 for patient 57b21dea-ff00-6c3e-92d9-91c7627f53b2  
+ Added 16 relationships to graph  
+Processing document 6/111 for patient 8c8e1c9a-b310-43c6-33a7-ad11bad21c40  
+ Added 36 relationships to graph  
+Processing document 11/111 for patient c420eb5d-97eb-59b6-b247-0ba188408db5  
+ Added 11 relationships to graph  
+Processing document 5/111 for patient 1f0ca842-8c2d-a943-c047-dafce690f5a2  
+ Added 31 relationships to graph  
+Processing document 10/111 for patient b5193ef4-ab73-ddd3-e7dd-d8168b33e7f6  
+ Added 27 relationships to graph  
+Processing document 4/111 for patient 3477fa4e-a09a-e779-5d56-eeb00dee758b  
+ Added 36 relationships to graph  
+Processing document 3/111 for patient 6da68959-d157-b9a3-48bc-1454e5517d6a  
+ Added 37 relationships to graph  
+Processing document 9/111 for patient 5a0fd7a2-6bfd-af1e-7bb6-2060136302c3  
+ Added 56 relationships to graph  
+Processing document 2/111 for patient 37895f0e-877f-7ea7-aa1b-0b69fcd11385  
+ Added 45 relationships to graph  
+Processing document 1/111 for patient f4e9b2c8-9db5-5597-a6a7-1215a638c1e2  
+ Added 50 relationships to graph  
+Processing document 8/111 for patient 7ddb0322-da41-c9d3-2018-4581109426b2  
+ Added 72 relationships to graph  
+Processing document 12/111 for patient 28f107b5-e973-ece3-b762-c2dbd9a01ba8  
+ Added 37 relationships to graph  
+Processing document 15/111 for patient fc3e2c0f-6809-7e7b-4ad8-769a732bf13a  
+ Added 34 relationships to graph  
+Processing document 18/111 for patient 406e8bad-81b5-7624-5b8a-4aeeb74028f5  
+ Added 16 relationships to graph  
+Processing document 17/111 for patient 7cad1f7c-cf61-fd24-254f-d02265160c0a  
+ Added 37 relationships to graph  
+Processing document 16/111 for patient 0851b7fb-87a8-3edc-1e11-8dcb03824dde  
+ Added 33 relationships to graph  
+Processing document 20/111 for patient c8114bff-6bab-8353-597d-4f155f5f1c3e  
+ Added 34 relationships to graph  
+Processing document 13/111 for patient 8dacd3c2-9e71-7d5d-02aa-7ad9541a0ab9  
+ Added 42 relationships to graph  
+Processing document 14/111 for patient 25f30c19-e98a-85ea-6de8-f976388d4678  
+ Added 36 relationships to graph  
+Processing document 21/111 for patient c3dae8db-25ee-c40b-c605-600fad411d34  
+ Added 33 relationships to graph  
+Processing document 23/111 for patient 5f9bfe93-062d-ca4b-5389-f8cac604a7e3  
+ Added 36 relationships to graph  
+Processing document 19/111 for patient 13ac6eee-8cf1-e597-1c91-453c8f069a3c  
+ Added 32 relationships to graph  
+Processing document 25/111 for patient 006c29d1-d868-3a9e-ceab-31f23e398f45  
+ Added 27 relationships to graph  
+Processing document 29/111 for patient 48f06a5e-0d20-3fe6-f5ea-b45bc79e90db  
+ Added 22 relationships to graph  
+Processing document 31/111 for patient faec5a04-6c56-4296-9fec-4e218e627a32  
+ Added 12 relationships to graph  
+Processing document 26/111 for patient 2bc26ad6-ad32-0bb0-f964-0fe271fdf054  
+ Added 34 relationships to graph  
+Processing document 27/111 for patient 0098f2a9-2f4d-4209-778d-cb3426d85987  
+ Added 52 relationships to graph  
+Processing document 24/111 for patient 1754bc7d-28cd-4933-fc72-3d9a0d77cf54  
+ Added 58 relationships to graph  
+Processing document 28/111 for patient e1c6b5c4-34b7-7296-56ed-4c634e93deb9  
+ Added 59 relationships to graph  
+Processing document 30/111 for patient e5ed5bc3-51e1-a9a7-01fb-f66b8ac4045d  
+ Added 48 relationships to graph  
+Processing document 33/111 for patient 3270397c-dfa3-6cea-f2ec-be21ade6c52c  
+ Added 34 relationships to graph  
+Processing document 22/111 for patient 787f9e8e-d3a4-0407-55d1-01a3414fceaf  
+ Added 71 relationships to graph  
+Processing document 32/111 for patient bd6e7acc-7c87-7f0a-5d15-959cf11e22da  
+ Added 64 relationships to graph  
+Processing document 35/111 for patient e64918a6-528c-b49e-dff2-3cbe33266342  
+ Added 29 relationships to graph  
+Processing document 37/111 for patient 6754b3bf-f5ac-f359-fef6-87cf4b8508ab  
+ Added 20 relationships to graph  
+Processing document 38/111 for patient 2e2eb927-efd5-bbd4-297d-99071243a8cb  
+ Added 30 relationships to graph  
+Processing document 36/111 for patient 2da86d63-34ae-b887-ddff-8f6f1e6990f1  
+ Added 32 relationships to graph  
+Processing document 41/111 for patient 3c763653-7fd3-af8a-e65f-79d5bde98d3a  
+ Added 17 relationships to graph  
+Processing document 40/111 for patient 4faedf9f-2c0e-9800-943a-0930bd08c4c8  
+ Added 16 relationships to graph  
+Processing document 34/111 for patient 3f7873ab-0f61-be0c-9af8-f246eec6223a  
+ Added 51 relationships to graph  
+Processing document 39/111 for patient f49221bb-20fb-45cb-9345-09b6a83ae9de  
+ Added 37 relationships to graph  
+Processing document 43/111 for patient 77dfae18-8c8c-0ec2-050c-dd93f3ea1cc2  
+ Added 13 relationships to graph  
+Processing document 42/111 for patient b9bacf2f-7027-2e05-fa5b-19167071fdde  
+ Added 39 relationships to graph  
+Processing document 47/111 for patient 30e48e16-2df7-207e-7a3d-1650ef0c1ed8  
+ Added 23 relationships to graph  
+Processing document 45/111 for patient 750eda4e-3f12-c701-869e-1d392387dfa0  
+ Added 42 relationships to graph  
+Processing document 50/111 for patient 9f867ec4-9f3a-35af-4bb6-e2c18a603c72  
+ Added 18 relationships to graph  
+Processing document 53/111 for patient 0e5401fd-b241-3c84-066e-2b88e5ddafc7  
+ Added 18 relationships to graph  
+Processing document 46/111 for patient 1c1ab155-7314-095d-1641-06efd2cd0873  
+ Added 20 relationships to graph  
+Processing document 49/111 for patient 119e46a1-9323-916b-4152-e0daedb48f23  
+ Added 28 relationships to graph  
+Processing document 44/111 for patient ef2eaed0-b056-2a9f-7ccb-07a9c9fdabd5  
+ Added 44 relationships to graph  
+Processing document 52/111 for patient be874504-c868-ebfd-9a77-df6b1e5ff6cc  
+ Added 44 relationships to graph  
+Processing document 51/111 for patient 80e7f50a-3e99-d5ac-cf97-f8a4b4f9e6c7  
+ Added 41 relationships to graph  
+Processing document 54/111 for patient 0c76b28e-5685-0754-12d1-b1a6b79866f7  
+ Added 37 relationships to graph  
+Processing document 60/111 for patient 5dbd017f-d447-9546-8610-8f7bdaa77789  
+ Added 38 relationships to graph  
+Processing document 56/111 for patient b8ded152-e326-5833-f747-bf9b35c60a76  
+ Added 32 relationships to graph  
+Processing document 57/111 for patient 1e9713a5-742f-aca0-cf95-446338fdc57f  
+ Added 21 relationships to graph  
+Processing document 55/111 for patient 349720c1-0627-e77a-1619-bb11b1530e96  
+ Added 20 relationships to graph  
+Processing document 61/111 for patient 0fca905f-391c-08d3-4b93-b53f69b9da53  
+ Added 23 relationships to graph  
+Processing document 48/111 for patient d423f0d1-e7ed-d47e-af4f-20cfd996ac67  
+ Added 87 relationships to graph  
+Processing document 67/111 for patient 6f808eef-a811-11eb-3fcb-1ed910d79c4b  
+ Added 14 relationships to graph  
+Processing document 58/111 for patient 70775c58-59fb-a3db-9858-1d427567c195  
+ Added 39 relationships to graph  
+Processing document 63/111 for patient a3d34c1f-5421-e078-38ec-1498a5941dbe  
+ Added 27 relationships to graph  
+Processing document 59/111 for patient 97a046ab-d147-2707-d4cd-cba26c5360ad  
+ Added 52 relationships to graph  
+Processing document 64/111 for patient 80cca49f-29f9-d04f-851d-84b95f863793  
+ Added 34 relationships to graph  
+Processing document 69/111 for patient 575cac8f-bed1-32da-30a6-3a516a78500d  
+ Added 28 relationships to graph  
+Processing document 71/111 for patient 7785daad-accb-cb33-7d8f-2faebf8eb639  
+ Added 19 relationships to graph  
+Processing document 62/111 for patient 5fda1015-d0a5-e32d-d0b8-4662e6ce6c2b  
+ Added 80 relationships to graph  
+Processing document 66/111 for patient edc17058-55fb-08c7-12df-ece93a402e50  
+ Added 44 relationships to graph  
+Processing document 65/111 for patient 1a9873c2-1d93-e9d6-4e36-77fdb07fbcb2  
+ Added 54 relationships to graph  
+Processing document 70/111 for patient 5c68f376-dd2c-1133-a9cf-f023a5d99078  
+ Added 34 relationships to graph  
+Processing document 72/111 for patient 72b7a6b1-b196-7ba5-eb82-1e9b0f75b7bd  
+ Added 34 relationships to graph  
+Processing document 73/111 for patient 43e4a5fe-add4-5581-d0ef-80764c313418  
+ Added 41 relationships to graph  
+Processing document 79/111 for patient 74a4cdcf-7cc0-7658-e1e0-cd1182d5f205  
+ Added 17 relationships to graph  
+Processing document 78/111 for patient b61886a1-b76f-4ecf-b37a-29d0c6aefc26  
+ Added 17 relationships to graph  
+Processing document 74/111 for patient 103b63c9-9ef8-6d25-771e-2fba661489a1  
+ Added 49 relationships to graph  
+Processing document 75/111 for patient e6705c33-7349-8b12-484d-3b1f93227178  
+ Added 42 relationships to graph  
+Processing document 77/111 for patient 0a1bd9a2-fc21-7ad3-3d85-cf31b68eec28  
+ Added 30 relationships to graph  
+Processing document 68/111 for patient eeae0d25-5865-76b4-8ad7-9526bcf3a94d  
+ Added 42 relationships to graph  
+Processing document 84/111 for patient 15c6645a-8f7b-df42-95ec-8b49bda12c10  
+ Added 17 relationships to graph  
+Processing document 82/111 for patient 02cb6ae2-d3fd-e497-7077-77cdbeb5f0a1  
+ Added 31 relationships to graph  
+Processing document 76/111 for patient fd7387f3-3465-7a34-6778-25aac38a13c2  
+ Added 33 relationships to graph  
+Processing document 83/111 for patient b427e4ea-3a48-207a-bf7d-710f0b574091  
+ Added 24 relationships to graph  
+Processing document 87/111 for patient add095a2-64e5-aae2-11d2-9be2f89ff843  
+ Added 28 relationships to graph  
+Processing document 86/111 for patient 155b0e07-d5a9-cc0c-e01a-a982c5d9a8d6  
+ Added 27 relationships to graph  
+Processing document 81/111 for patient 8f87d617-a91b-29e0-e155-96a5d71de419  
+ Added 55 relationships to graph  
+Processing document 95/111 for patient e83fe1b3-f94f-5591-f851-1da300e24e99  
+ Added 2 relationships to graph  
+Processing document 88/111 for patient 3de203ff-a5b9-e99a-c705-3927503e2abf  
+ Added 20 relationships to graph  
+Processing document 80/111 for patient 033cccaf-bc92-3ddd-b64c-9ea45268a971  
+ Added 72 relationships to graph  
+Processing document 90/111 for patient 49424eb4-e2ba-40b5-0e2b-2c2d742cce4b  
+ Added 21 relationships to graph  
+Processing document 89/111 for patient 45e1243b-470c-efa8-8ce9-f0d50485a846  
+ Added 46 relationships to graph  
+Processing document 92/111 for patient 9c6ef4a8-79e8-92c4-2279-a0666694419b  
+ Added 24 relationships to graph  
+Processing document 85/111 for patient 782ada1b-32a4-888a-8812-d8de70d6e5d0  
+ Added 41 relationships to graph  
+Processing document 93/111 for patient 31014896-9c27-ae1a-71db-319df60ac5d3  
+ Added 35 relationships to graph  
+Processing document 99/111 for patient 3ac8c3a5-3c16-699f-537b-e7816347104b  
+ Added 28 relationships to graph  
+Processing document 96/111 for patient 7757f538-bffe-a8bf-0efb-8363354aab87  
+ Added 29 relationships to graph  
+Processing document 91/111 for patient 20802592-1c31-7339-4c4c-2fe648e1a716  
+ Added 39 relationships to graph  
+Processing document 102/111 for patient 583c0740-39e1-9e33-f9d6-4fdb2b815669  
+ Added 21 relationships to graph  
+Processing document 98/111 for patient add41d13-8e70-e327-4367-8d945e20f27b  
+ Added 19 relationships to graph  
+Processing document 97/111 for patient ae05f1fa-7913-f7bc-41bd-2dc8827555e7  
+ Added 35 relationships to graph  
+Processing document 94/111 for patient 9ad4a69b-02de-4aeb-2262-76745583a8ac  
+ Added 44 relationships to graph  
+Processing document 103/111 for patient 0db7560a-db72-0cef-c59c-1fd6762bc50d  
+ Added 21 relationships to graph  
+Processing document 100/111 for patient 55bc1034-ecf9-d005-5b9e-eac706fe541f  
+ Added 41 relationships to graph  
+Processing document 109/111 for patient 641efcda-7397-4172-c6ac-8231342fa53e  
+ Added 26 relationships to graph  
+Processing document 107/111 for patient a331b5bc-cbea-a205-a8bf-dbf3255ef36a  
+ Added 32 relationships to graph  
+Processing document 105/111 for patient 04300771-e00c-e414-830a-66f7ef3584da  
+ Added 49 relationships to graph  
+Processing document 101/111 for patient cae42a0d-c36c-8af1-8277-7c9abd011778  
+ Added 65 relationships to graph  
+Processing document 111/111 for patient 04181caa-fcc1-c6c8-743e-a903eff368de  
+ Added 37 relationships to graph  
+Processing document 110/111 for patient 9f9dbdcb-23a1-82cc-b7bc-e0e420a95bd1  
+ Added 26 relationships to graph  
+Processing document 104/111 for patient 9cbd97ef-2209-9b1c-b6f7-a23a6c081740  
+ Added 27 relationships to graph  
+Processing document 106/111 for patient f380d818-b685-618e-22dc-b2db2fe0a6c0  
+ Added 97 relationships to graph  
+Processing document 108/111 for patient 782001bc-f712-50ae-04f5-9a488f3ef4aa  
+ Added 104 relationships to graph  
+Extracting relationships: 100%|████████████████████████| 111/111 [18:18<00:00, 9.90s/doc]
+
+Knowledge Graph population complete. Successfully extracted relations from 111/111 documents.
+Total relationships extracted: 4001
+Final Graph Schema:
+Node properties:
+Patient {id: STRING}
+Treatment {id: STRING}
+Condition {id: STRING}
+Diagnosis {id: STRING}
+Symptom {id: STRING}
+Relationship properties:
+
+The relationships:
+(:Patient)-[:RECEIVES_TREATMENT]->(:Treatment)
+(:Patient)-[:HAS_CONDITION]->(:Condition)
+(:Patient)-[:HAS_DIAGNOSIS]->(:Diagnosis)
+(:Patient)-[:EXHIBITS_SYMPTOM]->(:Symptom)

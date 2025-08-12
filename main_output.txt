@@ -1,0 +1,944 @@
+/Users/sid/workspace/utaustin/utaustin-aih/A8/main.py:11: LangChainDeprecationWarning: As of langchain-core 0.3.0, LangChain uses pydantic v2 internally. The langchain_core.pydantic_v1 module was a compatibility shim for pydantic v1, and should no longer be used. Please update the code to import from Pydantic directly.
+
+For example, replace imports like: `from langchain_core.pydantic_v1 import BaseModel`
+with: `from pydantic import BaseModel`
+or the v1 compatibility namespace if you are working in a code base that has not been fully upgraded to pydantic 2 yet. from pydantic.v1 import BaseModel
+
+from knowledge_graph import populate_knowledge_graph, create_graph_rag_chain
+/Users/sid/workspace/utaustin/utaustin-aih/A8/knowledge_graph.py:15: LangChainDeprecationWarning: The class `Neo4jGraph` was deprecated in LangChain 0.3.8 and will be removed in 1.0. An updated version of the class exists in the :class:`~langchain-neo4j package and should be used instead. To use it run `pip install -U :class:`~langchain-neo4j` and import as `from :class:`~langchain_neo4j import Neo4jGraph``.
+graph = Neo4jGraph()
+--- Step 1: Loading Data ---
+Dataset already downloaded.
+Parsing clinical notes from individual patient FHIR files...
+Processing patient files: 100%|█████████████████████████| 111/111 [00:02<00:00, 37.63it/s]
+
+Successfully curated and processed data for 111 patients.
+
+--- Step 2: Initializing Models ---
+--- Using Local HuggingFace Embeddings for this run ---
+
+--- Step 4: Building RAG Pipelines ---
+Building Standard RAG chain...
+Building Parent Document RAG chain...
+Building Sentence Window RAG chain...
+Building Graph RAG chain...
+
+--- Step 5: Running Comparison ---
+
+==================== Question 1: What are the common symptoms and conditions associated with elderly patients? ====================
+
+--- Testing Pipeline: Standard RAG ---
+/Users/sid/workspace/utaustin/utaustin-aih/A8/main.py:96: LangChainDeprecationWarning: The method `Chain.run` was deprecated in langchain 0.1.0 and will be removed in 1.0. Use :meth:`~invoke` instead.
+result = pipeline.run(question)
+Answer: Based on the provided clinical notes, I cannot answer your question. The documents do not contain information about elderly patients; the ages mentioned are 40, 51, and 52.
+Time Taken: 7.93 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the provided clinical notes, the one elderly patient, Dotty422 (ages 91 and 93), is associated with the following conditions:
+
+- Chronic pain
+- Chronic low back pain
+- Chronic neck pain
+- Severe anxiety (panic)
+
+While the patient's chief complaint was "No complaints," she was prescribed medications that suggest other underlying conditions, such as insulin for diabetes and lisinopril, amlodipine, and hydrochlorothiazide, which are often used to treat high blood pressure.
+Time Taken: 14.23 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, here are the common symptoms and conditions associated with the elderly patients mentioned (ages 75, 93, 105, and 106):
+
+**Common Symptoms:**
+
+- Thirst
+- Frequent urination
+- Fatigue
+- Blurred vision
+- Joint swelling and redness
+
+**Common Conditions:**
+
+- Gingival disease / Gingivitis
+- Acute bronchitis
+- Severe anxiety
+- Chronic pain (including chronic low back and neck pain)
+- Stress
+- Social isolation
+- Unhealthy alcohol drinking behavior
+  Time Taken: 17.11 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (s:Symptom)<-[:EXHIBITS_SYMPTOM]-(p:Patient)-[:HAS_CONDITION]->(c:Condition)
+> WITH s, c, count(p) AS patientCount
+> ORDER BY patientCount DESC
+> RETURN s.id AS symptom, c.id AS condition, patientCount
+
+Full Context:
+[{'symptom': 'stress (finding)', 'condition': 'limited social contact (finding)', 'patientCount': 5}, {'symptom': 'stress', 'condition': 'past pregnancy history of miscarriage', 'patientCount': 5}, {'symptom': 'stress (finding)', 'condition': 'victim of intimate partner abuse (finding)', 'patientCount': 4}, {'symptom': 'stress (finding)', 'condition': 'social isolation (finding)', 'patientCount': 3}, {'symptom': 'stress (finding)', 'condition': 'risk activity involvement (finding)', 'patientCount': 3}, {'symptom': 'stress (finding)', 'condition': 'part-time employment (finding)', 'patientCount': 3}, {'symptom': 'stress (finding)', 'condition': 'full-time employment (finding)', 'patientCount': 3}, {'symptom': 'stress (finding)', 'condition': 'allergic disposition (finding)', 'patientCount': 3}, {'symptom': 'loss of taste', 'condition': 'stress', 'patientCount': 3}, {'symptom': 'stress', 'condition': 'body mass index 30+ - obesity', 'patientCount': 3}]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 33.64 seconds
+
+==================== Question 2: Describe the typical treatment patterns for patients with cardiovascular conditions. ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided context for a patient with chronic congestive heart failure, a typical treatment pattern involves a combination of medications, diagnostic procedures, and regular lab monitoring.
+
+**Medications:**
+The patient is prescribed several oral medications commonly used for cardiovascular conditions:
+
+- **lisinopril:** An ACE inhibitor for blood pressure and heart failure.
+- **hydrochlorothiazide:** A diuretic to reduce fluid retention and blood pressure.
+- **amlodipine:** A calcium channel blocker for high blood pressure.
+- **furosemide:** A diuretic to treat fluid retention (edema) associated with congestive heart failure.
+
+**Procedures:**
+To monitor the heart's condition and function, the following procedures are conducted:
+
+- **echocardiography:** An ultrasound of the heart.
+- **electrocardiographic procedure (ECG/EKG):** To check the heart's electrical activity.
+- **assessment using new york heart association classification:** To stage the severity of heart failure symptoms.
+- **medication reconciliation:** To ensure all medications are correctly documented and managed.
+
+**Lab Reports:**
+A variety of blood tests are ordered to track the patient's condition and the effects of medication:
+
+- **heart failure tracking panel**
+- **basic metabolic panel** and **comprehensive metabolic 2000 panel**
+- **lipid panel**
+- **troponin i.cardiac panel**
+- **iron panel** and **iron and iron binding capacity panel**
+- **cbc panel**
+  Time Taken: 16.60 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the provided clinical notes, patients diagnosed with **ischemic heart disease** are typically treated with a combination of medications. The common treatment pattern includes:
+
+- **24 hr metoprolol succinate 100 mg extended release oral tablet**
+- **nitroglycerin 0.4 mg/actuat mucosal spray**
+
+One patient with ischemic heart disease was also prescribed **simvastatin 20 mg oral tablet** in addition to the other two medications.
+
+Other patients with cardiovascular conditions, such as "acute non-st segment elevation myocardial infarction" or "abnormal findings diagnostic imaging heart+coronary circulat," did not have specific medications listed in their treatment plans in the provided documents.
+Time Taken: 14.08 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, the typical treatment patterns for patients with cardiovascular conditions involve a combination of referrals, diagnostic procedures, surgical interventions, and medication management.
+
+**Diagnostic and Initial Steps:**
+
+- Patients often present with "abnormal findings diagnostic imaging heart + coronary circulat" or a diagnosis like "chronic congestive heart failure."
+- A common first step is a **referral to a cardiology service** or a **cardiac surgery service**.
+- This is followed by a **consultation for treatment**.
+- Diagnostic procedures like **angiography of the coronary artery** and **electrocardiogram** are conducted.
+
+**Procedures and Surgeries:**
+
+- For patients requiring surgery, such as for a coronary artery bypass grafting, a series of procedures are performed. These include:
+  - **Anesthesia and Preparation:** Administration of anesthesia, intubation, and preparation of the patient.
+  - **Surgical Intervention:** Median sternotomy, cardiopulmonary bypass operation, placement of an aortic cross clamp, and induced cardioplegia.
+  - **Catheterization and Support:** Insertion of a catheter into an artery, pulmonary catheterization with a Swan-Ganz catheter, and transfusion of packed red blood cells.
+- After procedures, patients receive **post-anesthesia care management**.
+
+**Medications:**
+
+- Patients are often prescribed medications to manage their conditions, including:
+  _ **Lisinopril**
+  _ **Hydrochlorothiazide**
+  _ **Amlodipine**
+  _ **Simvastatin**
+  Time Taken: 14.20 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (c:Condition)<-[:HAS_CONDITION]-(p:Patient)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> WHERE c.id CONTAINS 'cardiovascular'
+> WITH t, count(p) AS patientCount
+> RETURN t.id AS treatment, patientCount
+> ORDER BY patientCount DESC
+
+Full Context:
+[]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 19.18 seconds
+
+==================== Question 3: What are the most frequent medications prescribed to patients with chronic pain? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided clinical notes, the following medications were prescribed for conditions related to pain:
+
+- **ibuprofen 400 mg oral tablet:** Prescribed for a patient with chronic pain and chronic low back pain.
+- **naproxen sodium 220 mg oral tablet:** Prescribed for a patient with a whiplash injury to the neck and for a patient with osteoarthritis of the hip.
+
+Of these, naproxen sodium was the most frequently prescribed medication for pain-related conditions in the given text.
+Time Taken: 9.84 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the documents provided, the medications prescribed to patients with chronic pain are:
+
+- acetaminophen 325 mg oral tablet [tylenol]
+- ibuprofen 400 mg oral tablet [ibu]
+  Time Taken: 9.42 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the context provided, the only patient mentioned with chronic pain has "no active medications." Therefore, I cannot determine the most frequent medications prescribed for this condition from the text.
+Time Taken: 6.11 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (c:Condition {id: 'chronic pain'})<-[:HAS_CONDITION]-(p:Patient)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> WITH t, count(t) AS frequency
+> RETURN t.id, frequency
+> ORDER BY frequency DESC
+
+Full Context:
+[{'t.id': 'influenza, seasonal, injectable, preservative free', 'frequency': 12}, {'t.id': 'sodium fluoride 0.0272 mg/mg oral gel', 'frequency': 11}, {'t.id': 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'frequency': 11}, {'t.id': 'dental care', 'frequency': 8}, {'t.id': 'acetaminophen 325 mg oral tablet', 'frequency': 7}, {'t.id': 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose', 'frequency': 6}, {'t.id': 'therapy', 'frequency': 6}, {'t.id': 'acetaminophen 300 mg / hydrocodone bitartrate 5 mg oral tablet', 'frequency': 5}, {'t.id': 'postoperative care for dental procedure', 'frequency': 5}, {'t.id': 'respiratory therapy', 'frequency': 5}]
+
+> Finished chain.
+> Answer: The most frequent medications and treatments prescribed to patients with chronic pain are influenza, seasonal, injectable, preservative free; sodium fluoride 0.0272 mg/mg oral gel; td (adult), 5 lf tetanus toxoid, preservative free, adsorbed; dental care; acetaminophen 325 mg oral tablet; covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose; therapy; acetaminophen 300 mg / hydrocodone bitartrate 5 mg oral tablet; postoperative care for dental procedure; and respiratory therapy.
+> Time Taken: 40.47 seconds
+
+==================== Question 4: Which patients were diagnosed with 'Viral sinusitis' and what treatments did they receive? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the clinical notes provided, here are the patients diagnosed with 'Viral sinusitis' and the treatments they received:
+
+- **Jarrett354 (on 2023-03-27):** Was diagnosed with viral sinusitis. The clinical note does not specify any treatment for this diagnosis.
+
+- **An unnamed patient (on 2021-06-26):** Was diagnosed with viral sinusitis and was prescribed amoxicillin 250 mg / clavulanate 125 mg oral tablet.
+
+- **An unnamed patient (on 2023-04-13):** Was diagnosed with viral sinusitis. The clinical note does not specify a treatment plan for this diagnosis.
+  Time Taken: 14.49 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the clinical notes provided, the following patients were diagnosed with 'Viral sinusitis':
+
+- **Lyman173:** Diagnosed on October 1, 2021, and again on March 15, 2024.
+- **Jeffery551:** Diagnosed on April 5, 2025.
+- **Annalisa973 Susy776:** Diagnosed on September 20, 2023.
+
+For all of these diagnoses, the "Plan" section of the clinical note is empty, so no specific treatments were documented.
+Time Taken: 11.32 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the clinical notes provided, here are the patients diagnosed with 'Viral sinusitis' and the treatments they received:
+
+- **Jarrett354:** Was diagnosed with viral sinusitis on two occasions.
+
+  - On the first occasion, no specific treatment or medication was listed in the plan for the sinusitis.
+  - On the second occasion, no specific treatment was listed in the plan. His active medications were for other conditions (Lisinopril, Amlodipine, Sodium fluoride).
+
+- **Wilson960:** Was diagnosed with viral sinusitis. His active medications at the time included **Ibuprofen 200 mg oral tablet**, which can be used to treat symptoms of sinusitis.
+
+- **Morton637:** Was diagnosed with viral sinusitis. His active medications at the time included **Acetaminophen 325 mg oral tablet**, which can be used to treat symptoms of sinusitis.
+  Time Taken: 16.63 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> MATCH (p:Patient)-[:HAS_DIAGNOSIS]->(:Diagnosis {id: 'Viral sinusitis'}), (p)-[:RECEIVES_TREATMENT]->(t:Treatment) RETURN p.id, t.id
+> Full Context:
+> [{'p.id': 'Victorina579', 't.id': 'Diabetes self management plan'}, {'p.id': 'Victorina579', 't.id': 'Lifestyle education regarding hypertension'}, {'p.id': 'Victorina579', 't.id': 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed'}, {'p.id': 'Victorina579', 't.id': 'Chronic obstructive pulmonary disease clinical management plan'}, {'p.id': 'Victorina579', 't.id': 'Naproxen sodium 220 mg oral tablet'}, {'p.id': 'Victorina579', 't.id': 'Musculoskeletal care'}, {'p.id': 'Victorina579', 't.id': 'Albuterol 5 mg/ml inhalation solution'}, {'p.id': 'Victorina579', 't.id': 'Hydrochlorothiazide 25 mg oral tablet'}, {'p.id': 'Victorina579', 't.id': 'Amlodipine 2.5 mg oral tablet'}, {'p.id': 'Victorina579', 't.id': 'Fluticasone propionate / salmeterol dry powder inhaler'}]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 12.66 seconds
+
+==================== Question 5: Find patients with fractures and list all the procedures and medications they received. ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the clinical notes provided, here are the patients with fractures and the procedures and medications they received:
+
+**Patient with fracture of the ankle:**
+
+- **Procedures:**
+  - plain x-ray of ankle region (procedure)
+  - bone immobilization (procedure)
+- **Medications:**
+  - naproxen sodium 220 mg oral tablet
+
+---
+
+**Patient visit on 2023-07-15 (with two separate fracture assessments):**
+
+- **For the fracture of the forearm:**
+
+  - **Procedures:**
+    - plain x-ray of humerus (procedure)
+    - bone immobilization (procedure)
+  - **Medications:**
+    - ibuprofen 100 mg oral tablet
+
+- **For the fracture of the ankle:**
+  - **Procedures:**
+    - plain x-ray of ankle region (procedure)
+    - bone immobilization (procedure)
+    - bone density scan (procedure)
+  - **Medications:**
+    - naproxen sodium 220 mg oral tablet
+
+---
+
+**Patient with fracture of the clavicle on 2024-08-19:**
+
+- **Procedures:**
+  - plain x-ray of clavicle (procedure)
+  - admission to orthopedic department (procedure)
+- **Medications:** \* ibuprofen 100 mg oral tablet
+  Time Taken: 21.92 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the clinical notes provided, here are the patients with fractures and the procedures and medications they received for those conditions:
+
+**Patient: Lisa683**
+
+- **Procedures:**
+
+  - plain x-ray of humerus (procedure)
+  - bone immobilization (procedure)
+  - plain x-ray of ankle region (procedure)
+
+- **Medications:**
+  - ibuprofen 100 mg oral tablet
+  - acetaminophen 160 mg chewable tablet
+  - acetaminophen 325 mg / hydrocodone bitartrate 7.5 mg oral tablet
+  - acetaminophen 325 mg oral tablet
+
+**Patient: Lu473**
+
+- **Procedures:**
+
+  - No procedures were listed in the plan for her visit for a fracture of the ankle.
+
+- **Medications:** \* No new medications were prescribed in the plan for her visit for a fracture of the ankle.
+  Time Taken: 18.19 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the context provided, here are the patients with fractures and the procedures and medications they received:
+
+**Patient 1**
+
+- **Procedures:**
+  - plain x - ray of humerus ( procedure )
+  - bone immobilization ( procedure )
+- **Medications:**
+  - acetaminophen 325 mg oral tablet
+  - amoxicillin 500 mg oral tablet
+  - cefuroxime 250 mg oral tablet
+  - ibuprofen 100 mg oral tablet
+
+**Patient 2**
+
+- **Procedures:**
+  - There is no information about procedures for this patient.
+- **Medications:**
+  - acetaminophen 325 mg oral tablet
+  - 1 ml epoetin alfa 4000 unt / ml injection [ epogen ]
+  - simvastatin 10 mg oral tablet
+  - acetaminophen 21. 7 mg / ml / dextromethorphan hydrobromide 1 mg / ml / doxylamine succinate
+
+**Patient 3**
+
+- **Procedures:**
+  - There is no information about procedures for this patient.
+- **Medications:**
+  _ tropicamide 5 mg / ml ophthalmic solution
+  _ acetaminophen 325 mg oral tablet
+  _ insulin isophane, human 70 unt / ml / insulin, regular, human 30 unt / ml injectable suspension [ humulin ]
+  _ naproxen sodium 220 mg oral tablet \* proparacaine hydrochloride 5 mg
+  Time Taken: 17.75 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:HAS_CONDITION]->(:Condition {id: 'fractures'}), (p)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN p.id, t.id
+
+Full Context:
+[]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 17.28 seconds
+
+==================== Question 6: Show me patients with diabetes and their complete treatment history including medications and procedures. ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the clinical notes provided, here is the patient with diabetes and their treatment history:
+
+**Patient: Norberto865**
+
+**Diabetes-Related Diagnoses:**
+
+- Prediabetes (finding)
+- Nonproliferative diabetic retinopathy due to type 2 diabetes mellitus (disorder)
+
+---
+
+### Complete Treatment History
+
+**Medications:**
+
+- tropicamide 5 mg/ml ophthalmic solution
+- insulin isophane, human 70 unt/ml / insulin, regular, human 30 unt/ml injectable suspension [humulin]
+
+**Procedures & Care Plans:**
+
+- diabetes self management plan (record artifact)
+- visual acuity testing (procedure)
+- intraocular pressure test (procedure)
+- ocular slit lamp examination (procedure)
+- indirect gonioscopy (procedure)
+- camera fundoscopy (procedure)
+- diabetic retinal eye exam (procedure)
+- medication reconciliation (procedure)
+  Time Taken: 19.16 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer:
+Time Taken: 2.21 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the context provided, here are the patients with diabetes or prediabetes and their treatment histories.
+
+**Patient: Erik495**
+
+- **Diagnosis:** Type 2 diabetes mellitus (disorder)
+- **Medications:**
+  - tropicamide 5 mg / ml ophthalmic solution
+- **Procedures:**
+  - visual acuity testing (procedure)
+  - intraocular pressure test (procedure)
+  - ocular slit lamp examination (procedure)
+  - indirect gonioscopy (procedure)
+  - camera fundoscopy (procedure)
+  - diabetic retinal eye exam (procedure)
+
+**Patient: Mertie42 Kiley170**
+
+- **Diagnosis:** While not explicitly stated, the patient is on insulin, a medication for diabetes.
+- **Medications:**
+  - insulin isophane, human 70 unt / ml / insulin, regular, human 30 unt / ml injectable suspension [ humulin ]
+- **Procedures:**
+  - visual acuity testing (procedure)
+  - intraocular pressure test (procedure)
+  - ocular slit lamp examination (procedure)
+  - indirect gonioscopy (procedure)
+  - camera fundoscopy (procedure)
+  - diabetic retinal eye exam (procedure)
+  - optical
+
+---
+
+The following patients were diagnosed with **prediabetes**:
+
+**Patient: Mertie42 Kiley170 (at age 34)**
+
+- **Diagnosis:** Prediabetes (finding)
+- **Medications:** No active medications.
+- **Plan:** Placed on a careplan: diabetes self management plan (record artifact)
+
+**Patient: Erik495 (at age 34)**
+
+- **Diagnosis:** Prediabetes (finding)
+- **Medications:** No active medications.
+- **Plan:** No specific procedures or plans were listed.
+
+**Patient: Unnamed**
+
+- **Diagnosis:** Prediabetes (finding)
+- **Medications:** No active medications.
+- **Plan:** Placed on a careplan: diabetes self management plan (record artifact)
+  Time Taken: 21.92 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:HAS_CONDITION|:HAS_DIAGNOSIS]->(:Condition {id: 'diabetes'})
+> WITH DISTINCT p
+> OPTIONAL MATCH (p)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN p.id, collect(t.id) AS treatments
+
+Received notification from DBMS server: {severity: WARNING} {code: Neo.ClientNotification.Statement.FeatureDeprecationWarning} {category: DEPRECATION} {title: This feature is deprecated and will be removed in future versions.} {description: The semantics of using colon in the separation of alternative relationship types will change in a future version. (Please use ':HAS_CONDITION|HAS_DIAGNOSIS' instead)} {position: line: 2, column: 34, offset: 40} for query: "cypher\nMATCH (p:Patient)-[:HAS_CONDITION|:HAS_DIAGNOSIS]->(:Condition {id: 'diabetes'})\nWITH DISTINCT p\nOPTIONAL MATCH (p)-[:RECEIVES_TREATMENT]->(t:Treatment)\nRETURN p.id, collect(t.id) AS treatments\n"
+Full Context:
+[]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 36.00 seconds
+
+==================== Question 7: What are the common health issues and treatments for patients who experienced domestic violence? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided clinical notes, here are the common health issues and treatments for patients who have experienced domestic violence:
+
+**Health Issues:**
+
+- Fracture of bone
+- Fracture of forearm
+- Concussion injury of brain
+- Stress
+- Opioid addiction
+- Limited social contact
+
+**Assessments, Screenings, and Treatments:**
+
+- **Screenings:**
+  - Screening for domestic abuse, including the Humiliation, Afraid, Rape, and Kick (HARK) questionnaire.
+  - Depression screening, including the Patient Health Questionnaire 2 item (PHQ-2).
+  - Assessment of substance use.
+  - Screening for alcohol use disorders, using the Alcohol Use Disorder Identification Test - Consumption (AUDIT-C).
+- **Procedures:**
+  - Assessment of health and social care needs.
+  - Medication reconciliation.
+- **Medications:**
+  - Ibuprofen 400 mg oral tablet.
+- **Immunizations:** \* Influenza, seasonal, injectable, preservative free.
+  Time Taken: 15.05 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the provided clinical notes, here are the health issues and treatments for the patient who experienced domestic violence:
+
+The patient, Lyman173, is noted as a "victim of intimate partner abuse (finding)".
+
+**Health Issues:**
+
+- **History:** Gingival disease, gingivitis, dental filling lost, stress, social isolation, and limited social contact.
+- **Chief Complaints:** Hunger, Tingling in Hands and Feet, Frequent Urination, Fatigue, Thirst, Blurred Vision, Joint Swelling, and Joint Redness.
+
+**Treatments and Procedures:**
+
+- Dental consultation and report
+- Dental care
+- Removal of supragingival and subgingival plaque and calculus
+- Dental plain x-ray bitewing
+- Examination of gingivae
+- Oral health education
+
+Additionally, another patient, Darlene91 Tena12, underwent a "screening for domestic abuse (procedure)" using the "humiliation, afraid, rape, and kick questionnaire [hark]". The result of her screening is not mentioned.
+Time Taken: 16.87 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, here are the common health issues and treatments for patients who have experienced domestic violence:
+
+**Common Health Issues:**
+
+- **Physical Injuries:** Fracture of bone, osteoporotic fracture of bone, fracture subluxation of wrist, and injury of tendon of the rotator cuff.
+- **Mental and Social Health:** Stress, social isolation, limited social contact, and homelessness.
+- **Substance Use:** Unhealthy alcohol drinking behavior.
+- **Other Conditions:** Ischemic heart disease, viral sinusitis, acute bronchitis, and various dental issues (primary dental caries, fractured dental filling, gingivitis, infection of tooth).
+
+**Treatments and Screenings:**
+
+- **Screening:** Patients undergo "screening for domestic abuse," which includes the "humiliation, afraid, rape, and kick questionnaire [hark]." They are also screened for depression ("phq - 2"), anxiety ("gad - 7"), and substance use ("audit - c").
+- **Assessments:** An "assessment of health and social care needs" is conducted.
+- **Medications:** Patients were prescribed pain medications such as "abuse - deterrent 12 hr oxycodone hydrochloride 10 mg extended release oral tablet [oxycontin]" and "acetaminophen 300 mg / hydrocodone bitartrate 5 mg oral tablet."
+- **Procedures:** Medication reconciliation and immunizations (influenza, pneumococcal) were also performed.
+  Time Taken: 16.80 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:HAS_CONDITION]->(:Condition {id: 'domestic violence'})
+> WITH p
+> OPTIONAL MATCH (p)-[r:HAS_CONDITION|:HAS_DIAGNOSIS]->(issue)
+> WHERE NOT (issue:Condition AND issue.id = 'domestic violence')
+> WITH p, collect(DISTINCT issue) AS issues
+> OPTIONAL MATCH (p)-[:RECEIVES_TREATMENT]->(treatment)
+> WITH issues + collect(DISTINCT treatment) AS findings
+> UNWIND findings AS finding
+> UNWIND finding AS item
+> WITH item, count(item) AS frequency
+> RETURN
+
+    CASE
+        WHEN item:Treatment THEN 'Treatment'
+        ELSE 'Health Issue'
+    END AS type,
+    item.id AS name,
+    frequency
+
+ORDER BY frequency DESC
+
+An error occurred: {code: Neo.ClientError.Statement.SyntaxError} {message: The semantics of using colon in the separation of alternative relationship types in conjunction with
+the use of variable binding, inlined property predicates, or variable length is no longer supported.
+Please separate the relationships types using `:HAS_CONDITION|HAS_DIAGNOSIS` instead. (line 4, column 36 (offset: 124))
+"OPTIONAL MATCH (p)-[r:HAS_CONDITION|:HAS_DIAGNOSIS]->(issue)"
+^}
+Time Taken: 65.91 seconds
+
+==================== Question 8: Analyze the health progression of patients with gingival disease from diagnosis to treatment. ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the clinical notes provided, I cannot analyze the health progression of patients with gingival disease from diagnosis to treatment.
+
+Here's why:
+
+- **Diagnosis is mentioned:** The notes for both Lavina533 and Claude750 state under "Assessment and Plan" that the "Patient is presenting with gingival disease (disorder)."
+- **Treatment is missing:** The "Plan" subsection, which would outline the specific treatments, is blank in all the provided notes.
+- **No Progression Data:** There are no follow-up notes for either patient to show how their condition changed over time after the assessment.
+
+While both patients are listed as taking "sodium fluoride 0.0272 mg/mg oral gel," the notes do not provide enough information to describe a treatment plan or track the progression of their condition.
+Time Taken: 16.34 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the clinical notes provided, it is not possible to analyze the health progression of the patient's gingival disease from diagnosis to treatment.
+
+Here's why:
+
+- **Pre-existing Condition:** In every clinical note, from the earliest in 2021 to the latest in 2024, "gingival disease (disorder)" and "gingivitis (disorder)" are listed as part of the patient's existing medical history. The documents do not contain information about the initial diagnosis.
+- **No Active Treatment Plan:** None of the "Assessment and Plan" sections in the provided notes mention the gingival disease or outline any specific treatment or follow-up for it. The visits were for other issues such as viral sinusitis, immunizations, and contraceptive management.
+- **Medication:** While the patient's medication list includes "sodium fluoride 0.0272 mg/mg oral gel," which is used for dental health, the notes do not specify if this was prescribed as a treatment for her gingival disease.
+  Time Taken: 18.02 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided clinical notes, here is an analysis of the health progression for patients with gingival disease:
+
+**Diagnosis:**
+The condition is consistently identified as "gingival disease (disorder)" or "gingivitis (disorder)" in the patients' history. In one case (Micaela928), the assessment explicitly states the "patient is presenting with gingival disease (disorder)."
+
+**Treatment Progression:**
+The treatment plans vary but generally follow a pattern of examination, cleaning, education, and in some cases, more advanced procedures or medication.
+
+- **Examination and Education:** A common starting point for all patients is an "examination of gingivae" and "oral health education."
+
+- **Cleaning and Plaque Removal:** A key treatment involves professional cleaning. For patient Micaela928, the plan included the "removal of supragingival plaque and calculus" (above the gumline) and "removal of subgingival plaque" (below the gumline).
+
+- **Medication:** Some patients are prescribed medication to manage the condition.
+
+  - Lyman173 was prescribed "sodium fluoride 0.0272 mg / mg oral gel."
+  - Esmeralda972 was prescribed "sodium fluoride."
+
+- **Surgical and Advanced Procedures:** For some patients, the treatment is more invasive. Augustus49 and Claude750 both had procedures that included:
+  - Dental surgical procedure
+  - Gingivectomy or gingivoplasty, per tooth
+  - Dental application of desensitizing medicament
+  - Postoperative care for dental procedure
+
+In summary, after a diagnosis of gingival disease or gingivitis, patients undergo an examination and receive education. Treatment can range from professional cleanings and fluoride prescriptions to more intensive surgical interventions like a gingivectomy, depending on the individual's needs.
+Time Taken: 22.88 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:HAS_CONDITION]->(:Condition {id: 'gingival disease'})
+> MATCH (p)-[:HAS_DIAGNOSIS]->(d:Diagnosis)
+> MATCH (p)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN p.id, d.id, t.id
+
+Full Context:
+[{'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': '24 hr metoprolol succinate 100 mg extended release oral tablet'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'nitroglycerin 0.4 mg/actuat mucosal spray'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'aspirin 81 mg oral tablet'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'weight management program'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'diabetes self management plan'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'fracture care'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'fitting of denture'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'influenza, seasonal, injectable, preservative free'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'sodium fluoride 0.0272 mg/mg oral gel'}, {'p.id': 'Mertie42 Kiley170', 'd.id': 'abnormal findings diagnostic imaging heart+coronary circulat', 't.id': 'acetaminophen 325 mg oral tablet'}]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 15.35 seconds
+
+==================== Question 9: Find patients with chronic conditions and describe their medication adherence patterns. ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the clinical notes provided, here are the patients with chronic conditions and the available information about their medication patterns:
+
+- **Doloris378:** Has a chronic condition of diabetes mellitus type 2. Her record indicates "No Active Medications."
+- **Tobias236:** Has a documented history of opioid addiction. His record indicates "No Active Medications."
+- **Corine538:** Has a documented history of opioid addiction. Her record indicates "No Active Medications."
+- **Unnamed Patients:** Several unnamed patients are noted as having "body mass index 30+ - obesity." All of their records state "No Active Medications."
+
+In all cases of patients with identified chronic conditions (diabetes, opioid addiction, obesity), the provided records list "No Active Medications." Therefore, there is no information available to describe their medication adherence patterns.
+Time Taken: 17.57 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the clinical notes provided, here are the patients with chronic conditions and a description of their medication patterns:
+
+**Luna60 Paulita78**
+
+- **Chronic Conditions:** Sleep apnea, chronic pain, and persistent symptoms of memory loss, decreased visual perception, and decreased judgment over several years.
+- **Medication Adherence:** Across all provided notes, the "Medications" section states "No Active Medications." Therefore, medication adherence cannot be assessed as she is not on any prescribed medications according to these records.
+
+**Julius90**
+
+- **Chronic Conditions:** Chronic pain, chronic low back pain, fibromyalgia, obesity, and stress.
+- **Medication Adherence:** In both of his clinical notes, the "Medications" section states "No Active Medications." Despite having several chronic conditions, he is not on any prescribed medication, so adherence cannot be evaluated.
+
+**Dotty422**
+
+- **Chronic Conditions:** Chronic pain, chronic low back pain, chronic neck pain, and severe anxiety.
+- **Medication Adherence:**
+  _ In her 2014 note, she was diagnosed with multiple chronic pain conditions but had "No Active Medications."
+  _ In her 2015 note, she was prescribed five medications: insulin, hydrochlorothiazide, tacrolimus, lisinopril, and amlodipine. \* There is no follow-up information in the subsequent notes to determine if she was taking these medications as prescribed. Therefore, her medication adherence pattern cannot be determined.
+  Time Taken: 19.46 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the context provided, here are the patients with chronic conditions and what is known about their medication adherence:
+
+- **A patient with a history of myocardial infarction:** This patient has several chronic conditions, including `myocardial infarction (disorder)`, `gingivitis (disorder)`, and `unhealthy alcohol drinking behavior (finding)`. They are on multiple medications, including acetaminophen, Percocet, nitroglycerin, and insulin. The provided text does not contain any information about this patient's medication adherence patterns.
+
+- **Tobias236:** This patient has a `documented history of opioid addiction`. According to the notes provided, this patient has "no active medications." Therefore, there is no medication adherence pattern to describe.
+  Time Taken: 19.04 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:HAS_CONDITION]->(c:Condition)
+> OPTIONAL MATCH (p)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN p.id AS patientId, c.id AS conditionId, COLLECT(t.id) AS treatments
+
+Full Context:
+[{'patientId': 'Buford910', 'conditionId': 'Prediabetes', 'treatments': ['Diabetes self management plan', 'Hep a, adult', 'Lisinopril 10 mg oral tablet', 'Lifestyle education regarding hypertension', 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'Coronary artery bypass grafting', 'Cefazolin 2000 mg injection', '1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', 'Midazolam 1 mg/ml injectable solution', '100 ml propofol 10 mg/ml injection', 'Rocuronium bromide 10 mg/ml injectable solution', 'Isoflurane 99.9 % inhalation solution', 'Remifentanil 2 mg injection', 'Covid-19, mrna, lnp-s, pf, 100 mcg/0.5ml dose or 50 mcg/0.25ml dose', 'Acetaminophen 21.7 mg/ml / dextromethorphan hydrobromide 1 mg/ml / doxylamine succinate 0.417 mg/ml oral solution', 'Respiratory therapy', 'Terminal care', 'Combined chemotherapy and radiation therapy', 'Cisplatin 50 mg injection', 'Paclitaxel 100 mg injection', 'Influenza, seasonal, injectable, preservative free', 'Sodium fluoride 0.0272 mg/mg oral gel', 'Dental care']}, {'patientId': 'Buford910', 'conditionId': 'Stress', 'treatments': ['Diabetes self management plan', 'Hep a, adult', 'Lisinopril 10 mg oral tablet', 'Lifestyle education regarding hypertension', 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'Coronary artery bypass grafting', 'Cefazolin 2000 mg injection', '1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', 'Midazolam 1 mg/ml injectable solution', '100 ml propofol 10 mg/ml injection', 'Rocuronium bromide 10 mg/ml injectable solution', 'Isoflurane 99.9 % inhalation solution', 'Remifentanil 2 mg injection', 'Covid-19, mrna, lnp-s, pf, 100 mcg/0.5ml dose or 50 mcg/0.25ml dose', 'Acetaminophen 21.7 mg/ml / dextromethorphan hydrobromide 1 mg/ml / doxylamine succinate 0.417 mg/ml oral solution', 'Respiratory therapy', 'Terminal care', 'Combined chemotherapy and radiation therapy', 'Cisplatin 50 mg injection', 'Paclitaxel 100 mg injection', 'Influenza, seasonal, injectable, preservative free', 'Sodium fluoride 0.0272 mg/mg oral gel', 'Dental care']}, {'patientId': 'Victorina579', 'conditionId': 'History of miscarriage', 'treatments': ['Diabetes self management plan', 'Lifestyle education regarding hypertension', 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'Chronic obstructive pulmonary disease clinical management plan', 'Naproxen sodium 220 mg oral tablet', 'Musculoskeletal care', 'Albuterol 5 mg/ml inhalation solution', 'Hydrochlorothiazide 25 mg oral tablet', 'Amlodipine 2.5 mg oral tablet', 'Fluticasone propionate / salmeterol dry powder inhaler', 'Spirometry', 'Pulmonary rehabilitation', 'Colonoscopy', 'Mammography', 'Bone density scan', 'Diabetic retinal eye exam', 'Tropicamide 5 mg/ml ophthalmic solution', 'Ibuprofen 200 mg oral tablet', 'Physiotherapy care plan', 'Clopidogrel 75 mg oral tablet', 'Simvastatin 20 mg oral tablet', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'Nitroglycerin 0.4 mg/actuat mucosal spray', 'Percutaneous coronary intervention', 'Covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose', 'Rectal polypectomy', 'Pneumococcal conjugate pcv 13', 'Lung volume reduction surgery', 'Pneumococcal polysaccharide vaccine, 23 valent', 'Influenza, seasonal, injectable, preservative free', 'Sodium fluoride 0.0272 mg/mg oral gel', 'Hospice care', 'Dental care']}, {'patientId': 'Victorina579', 'conditionId': 'History of artificial joint', 'treatments': ['Diabetes self management plan', 'Lifestyle education regarding hypertension', 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'Chronic obstructive pulmonary disease clinical management plan', 'Naproxen sodium 220 mg oral tablet', 'Musculoskeletal care', 'Albuterol 5 mg/ml inhalation solution', 'Hydrochlorothiazide 25 mg oral tablet', 'Amlodipine 2.5 mg oral tablet', 'Fluticasone propionate / salmeterol dry powder inhaler', 'Spirometry', 'Pulmonary rehabilitation', 'Colonoscopy', 'Mammography', 'Bone density scan', 'Diabetic retinal eye exam', 'Tropicamide 5 mg/ml ophthalmic solution', 'Ibuprofen 200 mg oral tablet', 'Physiotherapy care plan', 'Clopidogrel 75 mg oral tablet', 'Simvastatin 20 mg oral tablet', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'Nitroglycerin 0.4 mg/actuat mucosal spray', 'Percutaneous coronary intervention', 'Covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose', 'Rectal polypectomy', 'Pneumococcal conjugate pcv 13', 'Lung volume reduction surgery', 'Pneumococcal polysaccharide vaccine, 23 valent', 'Influenza, seasonal, injectable, preservative free', 'Sodium fluoride 0.0272 mg/mg oral gel', 'Hospice care', 'Dental care']}, {'patientId': 'Belen306', 'conditionId': 'allergic disposition', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}, {'patientId': 'Belen306', 'conditionId': 'latex allergy', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}, {'patientId': 'Belen306', 'conditionId': 'mold allergy', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}, {'patientId': 'Belen306', 'conditionId': 'house dust mite allergy', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}, {'patientId': 'Belen306', 'conditionId': 'animal dander allergy', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}, {'patientId': 'Belen306', 'conditionId': 'lisinopril allergy', 'treatments': ['1 ml heparin sodium, porcine 5000 unt/ml injection', '25 ml protamine sulfate (usp) 10 mg/ml injection', '2 ml ondansetron 2 mg/ml injection', '100 ml propofol 10 mg/ml injection', '24 hr metoprolol succinate 100 mg extended release oral tablet', 'nitroglycerin 0.4 mg/actuat mucosal spray', 'cefazolin 2000 mg injection', 'midazolam 1 mg/ml injectable solution', 'rocuronium bromide 10 mg/ml injectable solution', 'self-care interventions', 'chlorpheniramine maleate 2 mg/ml oral solution', 'weight management program', 'diabetes self management plan', 'fracture care', 'clopidogrel 75 mg oral tablet', 'simvastatin 20 mg oral tablet', 'sevoflurane 1000 mg/ml inhalation solution', 'remifentanil 2 mg injection', 'influenza, seasonal, injectable, preservative free', 'sodium fluoride 0.0272 mg/mg oral gel', 'acetaminophen 325 mg oral tablet', 'naproxen sodium 220 mg oral tablet', 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'routine antenatal care', 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose']}]
+
+> Finished chain.
+> Answer: Based on the information provided, it is not possible to describe medication adherence patterns. However, here are the patients with chronic conditions and their listed treatments:
+
+**Patient: Buford910**
+
+- **Conditions:** Prediabetes, Stress
+- **Treatments:** Diabetes self management plan, Hep a, adult, Lisinopril 10 mg oral tablet, Lifestyle education regarding hypertension, Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed, Coronary artery bypass grafting, Cefazolin 2000 mg injection, 1 ml heparin sodium, porcine 5000 unt/ml injection, 25 ml protamine sulfate (usp) 10 mg/ml injection, 2 ml ondansetron 2 mg/ml injection, Midazolam 1 mg/ml injectable solution, 100 ml propofol 10 mg/ml injection, Rocuronium bromide 10 mg/ml injectable solution, Isoflurane 99.9 % inhalation solution, Remifentanil 2 mg injection, Covid-19, mrna, lnp-s, pf, 100 mcg/0.5ml dose or 50 mcg/0.25ml dose, Acetaminophen 21.7 mg/ml / dextromethorphan hydrobromide 1 mg/ml / doxylamine succinate 0.417 mg/ml oral solution, Respiratory therapy, Terminal care, Combined chemotherapy and radiation therapy, Cisplatin 50 mg injection, Paclitaxel 100 mg injection, Influenza, seasonal, injectable, preservative free, Sodium fluoride 0.0272 mg/mg oral gel, Dental care.
+
+**Patient: Victorina579**
+
+- **Conditions:** History of miscarriage, History of artificial joint
+- **Treatments:** Diabetes self management plan, Lifestyle education regarding hypertension, Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed, Chronic obstructive pulmonary disease clinical management plan, Naproxen sodium 220 mg oral tablet, Musculoskeletal care, Albuterol 5 mg/ml inhalation solution, Hydrochlorothiazide 25 mg oral tablet, Amlodipine 2.5 mg oral tablet, Fluticasone propionate / salmeterol dry powder inhaler, Spirometry, Pulmonary rehabilitation, Colonoscopy, Mammography, Bone density scan, Diabetic retinal eye exam, Tropicamide 5 mg/ml ophthalmic solution, Ibuprofen 200 mg oral tablet, Physiotherapy care plan, Clopidogrel 75 mg oral tablet, Simvastatin 20 mg oral tablet, 24 hr metoprolol succinate 100 mg extended release oral tablet, Nitroglycerin 0.4 mg/actuat mucosal spray, Percutaneous coronary intervention, Covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose, Rectal polypectomy, Pneumococcal conjugate pcv 13, Lung volume reduction surgery, Pneumococcal polysaccharide vaccine, 23 valent, Influenza, seasonal, injectable, preservative free, Sodium fluoride 0.0272 mg/mg oral gel, Hospice care, Dental care.
+
+**Patient: Belen306**
+
+- **Conditions:** allergic disposition, latex allergy, mold allergy, house dust mite allergy, animal dander allergy, lisinopril allergy
+- **Treatments:** 1 ml heparin sodium, porcine 5000 unt/ml injection, 25 ml protamine sulfate (usp) 10 mg/ml injection, 2 ml ondansetron 2 mg/ml injection, 100 ml propofol 10 mg/ml injection, 24 hr metoprolol succinate 100 mg extended release oral tablet, nitroglycerin 0.4 mg/actuat mucosal spray, cefazolin 2000 mg injection, midazolam 1 mg/ml injectable solution, rocuronium bromide 10 mg/ml injectable solution, self-care interventions, chlorpheniramine maleate 2 mg/ml oral solution, weight management program, diabetes self management plan, fracture care, clopidogrel 75 mg oral tablet, simvastatin 20 mg oral tablet, sevoflurane 1000 mg/ml inhalation solution, remifentanil 2 mg injection, influenza, seasonal, injectable, preservative free, sodium fluoride 0.0272 mg/mg oral gel, acetaminophen 325 mg oral tablet, naproxen sodium 220 mg oral tablet, td (adult), 5 lf tetanus toxoid, preservative free, adsorbed, routine antenatal care, covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose.
+  Time Taken: 52.23 seconds
+
+==================== Question 10: What is the relationship between patient socioeconomic status and access to certain treatments? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided clinical notes, it is not possible to determine a clear relationship between a patient's socioeconomic status and their access to certain treatments.
+
+All patients mentioned in the notes are described as coming from a "middle socioeconomic background." Because there is no variation in socioeconomic status, a comparison cannot be made.
+
+However, we can observe the following regarding insurance status and treatment plans:
+
+- A patient with **Medicaid** (Erwin847) had "rehabilitation therapy" conducted.
+- A patient with **NO INSURANCE** was placed on a careplan for "therapy."
+- Other patients, both with and without insurance, have no specific treatments listed in their plans.
+
+The provided information is insufficient to draw any conclusions about this relationship.
+Time Taken: 16.70 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the provided clinical notes, here is what can be determined about the relationship between socioeconomic status and access to certain treatments:
+
+All patients mentioned in the notes come from a "middle socioeconomic background," so it is not possible to compare different socioeconomic statuses. However, we can observe a potential link between insurance status and the type of care received.
+
+- **Shira43**, a 5-year-old female, initially had Blue Cross Blue Shield insurance. During this time, she was prescribed `sodium fluoride oral gel` for dental caries and an oral solution for acute bronchitis. Later, when her insurance status changed to "NO INSURANCE," she was not prescribed medication but was instead given a "patient referral for dental care."
+
+- **Alden634**, a 10-year-old male with "NO INSURANCE," received a wide range of dental procedures for gingival disease, including plaque removal, x-rays, a gingivectomy, and oral health education.
+
+- **Erik495**, who had Medicaid, was prescribed `simvastatin` and placed on a care plan for hyperlipidemia.
+
+In summary, the documents show that one patient's access to prescriptions appeared to change after losing insurance, receiving a referral instead of medication. However, another patient without insurance received extensive and specific procedures. Therefore, the provided text does not show a consistent pattern or a definitive relationship between a patient's insurance status and their access to treatment.
+Time Taken: 19.74 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, I cannot determine the relationship between a patient's socioeconomic status and their access to certain treatments. The documents state that patients from a "middle socioeconomic background" have either Medicare or Medicaid, but they do not provide any further information or analysis on this topic.
+Time Taken: 10.98 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN p.id, t.id
+
+Full Context:
+[{'p.id': 'Buford910', 't.id': 'Diabetes self management plan'}, {'p.id': 'Buford910', 't.id': 'Hep a, adult'}, {'p.id': 'Buford910', 't.id': 'Lisinopril 10 mg oral tablet'}, {'p.id': 'Buford910', 't.id': 'Lifestyle education regarding hypertension'}, {'p.id': 'Buford910', 't.id': 'Td (adult), 5 lf tetanus toxoid, preservative free, adsorbed'}, {'p.id': 'Buford910', 't.id': 'Coronary artery bypass grafting'}, {'p.id': 'Buford910', 't.id': 'Cefazolin 2000 mg injection'}, {'p.id': 'Buford910', 't.id': '1 ml heparin sodium, porcine 5000 unt/ml injection'}, {'p.id': 'Buford910', 't.id': '25 ml protamine sulfate (usp) 10 mg/ml injection'}, {'p.id': 'Buford910', 't.id': '2 ml ondansetron 2 mg/ml injection'}]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 27.54 seconds
+
+==================== Question 11: How do treatment patterns differ between patients with and without insurance? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided clinical notes, here is how the treatment patterns differ:
+
+- **Patients without insurance:**
+
+  - A patient with a tooth infection was placed on "therapy (regime/therapy)".
+  - A patient named Emmett200 underwent a series of procedures including a history and physical examination, initial patient assessment, development of an individualized care plan, physical therapy, occupational therapy, and was discharged from the hospital.
+
+- **Patients with insurance (Medicaid):**
+  _ A patient with prediabetes and anemia was placed on a "diabetes self management plan".
+  _ A patient named Norberto865 who was due for a medication review had no plan listed in the provided note.
+  Time Taken: 13.52 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the clinical notes provided, here is a summary of the treatment patterns for patients with and without insurance:
+
+**Patients without insurance:**
+
+- **Alden634 (No Insurance):** Received multiple dental procedures including consultations, cleanings (removal of plaque and calculus), x-rays, a surgical procedure, and oral health education. He also received an influenza immunization.
+- **Mertie42 Kiley170 (No Insurance):** Was placed on a weight management program.
+- **Adela471 Latashia561 (No Insurance):** Was placed on a weight management program.
+
+**Patients with insurance:**
+
+- **Mertie42 Kiley170 (Medicaid):** Was placed on a diabetes self-management plan after being diagnosed with prediabetes and anemia.
+- **Adela471 Latashia561 (Medicaid):** The notes do not list a specific treatment plan for the visit where she is noted to have Medicaid.
+
+In summary, based on this limited information, patients both with and without insurance received care plans and procedures. Patients without insurance were documented receiving dental care, immunizations, and weight management programs. The one patient with Medicaid for whom a plan is listed was placed on a diabetes self-management plan.
+Time Taken: 17.40 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, I cannot answer your question. All of the patients mentioned in the documents have some form of insurance, either Medicare or Medicaid. There is no information about patients without insurance to draw a comparison.
+Time Taken: 9.53 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (p:Patient)-[:RECEIVES_TREATMENT]->(t:Treatment)
+> RETURN t.id AS treatment, count(p) AS numberOfPatients
+> ORDER BY numberOfPatients DESC
+
+Full Context:
+[{'treatment': 'influenza, seasonal, injectable, preservative free', 'numberOfPatients': 86}, {'treatment': 'sodium fluoride 0.0272 mg/mg oral gel', 'numberOfPatients': 70}, {'treatment': 'td (adult), 5 lf tetanus toxoid, preservative free, adsorbed', 'numberOfPatients': 48}, {'treatment': 'acetaminophen 325 mg oral tablet', 'numberOfPatients': 44}, {'treatment': 'dental care', 'numberOfPatients': 42}, {'treatment': 'covid-19, mrna, lnp-s, pf, 30 mcg/0.3 ml dose', 'numberOfPatients': 30}, {'treatment': 'covid-19, mrna, lnp-s, pf, 100 mcg/0.5ml dose or 50 mcg/0.25ml dose', 'numberOfPatients': 27}, {'treatment': 'respiratory therapy', 'numberOfPatients': 26}, {'treatment': 'naproxen sodium 220 mg oral tablet', 'numberOfPatients': 24}, {'treatment': 'meningococcal mcv4p', 'numberOfPatients': 21}]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 35.03 seconds
+
+==================== Question 12: What are the most common comorbidities in patients with mental health conditions? ====================
+
+--- Testing Pipeline: Standard RAG ---
+Answer: Based on the provided clinical notes, I cannot answer your question. The documents are about a single patient and do not contain general information about the most common comorbidities in patients with mental health conditions.
+Time Taken: 6.55 seconds
+
+--- Testing Pipeline: Parent Document (Late Chunking) ---
+Answer: Based on the context provided, I cannot answer your question. The documents are clinical notes for a single patient and do not contain general information about common comorbidities in patients with mental health conditions.
+Time Taken: 6.45 seconds
+
+--- Testing Pipeline: Sentence Window (Simulated) ---
+Answer: Based on the provided context, the common comorbidities in patients with mental health conditions like anxiety, stress, or a history of substance use include:
+
+- Gingivitis
+- Viral sinusitis
+- Acute bronchitis
+- Stress
+  Time Taken: 14.23 seconds
+
+--- Testing Pipeline: Knowledge Graph RAG ---
+
+> Entering new GraphCypherQAChain chain...
+> Generated Cypher:
+> cypher
+> MATCH (patient:Patient)-[:HAS_CONDITION]->(mental_health_condition:Condition)
+> WHERE mental_health_condition.id IN ['Depression', 'Anxiety', 'Bipolar Disorder']
+> WITH DISTINCT patient
+> MATCH (patient)-[:HAS_CONDITION]->(comorbidity:Condition)
+> WHERE NOT comorbidity.id IN ['Depression', 'Anxiety', 'Bipolar Disorder']
+> RETURN comorbidity.id AS comorbidity, COUNT(patient) AS numberOfPatients
+> ORDER BY numberOfPatients DESC
+
+Full Context:
+[]
+
+> Finished chain.
+> Answer: I don't know the answer.
+> Time Taken: 38.50 seconds
+
+================================================================================
+RESULTS ANALYSIS AND COMPARISON
+================================================================================
+
+GENERATING COMPREHENSIVE ANALYSIS...
+
+PERFORMANCE COMPARISON:
+Timing Quality_Score Answer_Length  
+ mean std min max mean std min max mean std
+Pipeline  
+Knowledge Graph RAG 27.324 14.662 0.000 52.230 44.633 120.274 0.0 416.5 403.500 1042.091
+Parent Document (Late Chunking) 13.949 5.563 2.208 19.738 122.892 53.130 30.0 200.0 745.583 501.833
+Sentence Window (Simulated) 15.598 4.918 6.111 22.877 140.350 61.629 70.9 230.8 903.500 616.289
+Standard RAG 14.638 4.552 6.553 21.916 126.008 36.727 67.2 198.2 760.083 367.274
+
+QUESTION TYPE ANALYSIS:
+Timing Quality_Score
+Pipeline Question_Type  
+Knowledge Graph RAG Complex Analysis 33.689 2.400
+Graph Search 21.980 2.400
+Hybrid Search 22.528 139.633
+Vector Search 31.099 34.100
+Parent Document (Late Chunking) Complex Analysis 14.530 147.633
+Graph Search 10.572 83.200
+Hybrid Search 18.119 164.533
+Vector Search 12.577 96.200
+Sentence Window (Simulated) Complex Analysis 11.582 76.733
+Graph Search 18.765 176.800
+Hybrid Search 19.573 182.267
+Vector Search 12.473 125.600
+Standard RAG Complex Analysis 12.256 108.100
+Graph Search 18.521 135.433
+Hybrid Search 16.320 138.900
+Vector Search 11.454 121.600
+
+SIGNIFICANCE TESTS (Wilcoxon signed-rank, Quality_Score):
+Standard RAG vs Parent Document (Late Chunking): p-value = 0.9097
+Standard RAG vs Sentence Window (Simulated): p-value = 0.5186
+Standard RAG vs Knowledge Graph RAG: p-value = 0.0342
+Parent Document (Late Chunking) vs Sentence Window (Simulated): p-value = 0.4238
+Parent Document (Late Chunking) vs Knowledge Graph RAG: p-value = 0.0522
+Sentence Window (Simulated) vs Knowledge Graph RAG: p-value = 0.0425
+
+GENERATING VISUALIZATIONS...
+Visualization saved as 'rag_pipeline_comparison.png'
+Saved individual subplot images: plot_avg_response_time.png, plot_avg_quality_score.png, plot_quality_by_question_type.png, plot_timing_vs_quality.png
+
+# DETAILED ANALYSIS REPORT:
+
+Best Overall Pipeline: Sentence Window (Simulated)
+Fastest Pipeline: Parent Document (Late Chunking)
+Best for Vector Search: Sentence Window (Simulated)
+Best for Graph Search: Sentence Window (Simulated)
+Best for Hybrid Search: Sentence Window (Simulated)
+Best for Complex Analysis: Parent Document (Late Chunking)
+
+# RECOMMENDATIONS:
+
+Standard RAG:
+Slow response time: 14.64s
+High quality responses: 126.0/100
+
+Parent Document (Late Chunking):
+Slow response time: 13.95s
+High quality responses: 122.9/100
+
+Sentence Window (Simulated):
+Slow response time: 15.60s
+High quality responses: 140.3/100
+
+Knowledge Graph RAG:
+Slow response time: 27.32s
+Lower quality responses: 44.6/100
+
+Detailed results saved to 'rag_pipeline_results.csv'

@@ -1,0 +1,30 @@
+# For environment variables
+python-dotenv==1.1.1
+
+# Core LangChain and Google libraries
+langchain==0.3.27
+langchain-openai==0.3.29
+langchain-anthropic==0.3.18
+langchain-google-genai==2.1.9
+langchain-huggingface==0.3.1
+langchain-community==0.3.27
+langchain-text-splitters==0.3.9
+
+# For data handling and vector stores
+pandas==2.2.3
+faiss-cpu==1.11.0.post1
+requests==2.32.3
+tqdm==4.67.1
+
+# For embeddings
+sentence-transformers==5.1.0
+tf-keras==2.19.0
+
+# For Knowledge Graph
+neo4j==5.28.2
+
+# For visualization and analysis
+matplotlib==3.9.2
+
+# Miscellaneous
+protobuf==3.20.3

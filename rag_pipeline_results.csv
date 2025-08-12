@@ -1,0 +1,49 @@
+Pipeline,Question_Index,Question_Type,Timing,Quality_Score,Answer_Length
+Standard RAG,0,Vector Search,7.926734209060669,67.2,172
+Standard RAG,1,Vector Search,16.599754095077515,198.20000000000002,1482
+Standard RAG,2,Vector Search,9.83559513092041,99.4,494
+Standard RAG,3,Graph Search,14.48581576347351,107.30000000000001,573
+Standard RAG,4,Graph Search,21.916225910186768,165.4,1154
+Standard RAG,5,Graph Search,19.162341117858887,133.60000000000002,836
+Standard RAG,6,Hybrid Search,15.046168088912964,146.8,968
+Standard RAG,7,Hybrid Search,16.338223218917847,131.0,810
+Standard RAG,8,Hybrid Search,17.57475781440735,138.9,889
+Standard RAG,9,Complex Analysis,16.699058055877686,130.0,800
+Standard RAG,10,Complex Analysis,13.516475915908813,121.60000000000001,716
+Standard RAG,11,Complex Analysis,6.553457975387573,72.7,227
+Parent Document (Late Chunking),0,Vector Search,14.23169469833374,99.1,491
+Parent Document (Late Chunking),1,Vector Search,14.076267957687378,121.4,714
+Parent Document (Late Chunking),2,Vector Search,9.42286992073059,68.1,181
+Parent Document (Late Chunking),3,Graph Search,11.319938898086548,90.9,409
+Parent Document (Late Chunking),4,Graph Search,18.186845064163208,128.7,787
+Parent Document (Late Chunking),5,Graph Search,2.207760810852051,30.0,0
+Parent Document (Late Chunking),6,Hybrid Search,16.872299194335938,146.10000000000002,961
+Parent Document (Late Chunking),7,Hybrid Search,18.019768953323364,147.5,975
+Parent Document (Late Chunking),8,Hybrid Search,19.46392583847046,200.0,1500
+Parent Document (Late Chunking),9,Complex Analysis,19.73824715614319,199.0,1490
+Parent Document (Late Chunking),10,Complex Analysis,17.398530960083008,171.5,1215
+Parent Document (Late Chunking),11,Complex Analysis,6.451957941055298,72.4,224
+Sentence Window (Simulated),0,Vector Search,17.10853886604309,99.80000000000001,498
+Sentence Window (Simulated),1,Vector Search,14.19926929473877,206.10000000000002,1561
+Sentence Window (Simulated),2,Vector Search,6.1114280223846436,70.9,209
+Sentence Window (Simulated),3,Graph Search,16.62511682510376,135.10000000000002,851
+Sentence Window (Simulated),4,Graph Search,17.753468990325928,169.7,1197
+Sentence Window (Simulated),5,Graph Search,21.915164947509766,225.60000000000002,1756
+Sentence Window (Simulated),6,Hybrid Search,16.799924850463867,188.20000000000002,1382
+Sentence Window (Simulated),7,Hybrid Search,22.876952171325684,230.8,1808
+Sentence Window (Simulated),8,Hybrid Search,19.041542053222656,127.80000000000001,778
+Sentence Window (Simulated),9,Complex Analysis,10.978832960128784,83.1,331
+Sentence Window (Simulated),10,Complex Analysis,9.533421993255615,74.5,245
+Sentence Window (Simulated),11,Complex Analysis,14.233356952667236,72.6,226
+Knowledge Graph RAG,0,Vector Search,33.643094062805176,2.4000000000000004,24
+Knowledge Graph RAG,1,Vector Search,19.1803879737854,2.4000000000000004,24
+Knowledge Graph RAG,2,Vector Search,40.474502086639404,97.5,475
+Knowledge Graph RAG,3,Graph Search,12.66244387626648,2.4000000000000004,24
+Knowledge Graph RAG,4,Graph Search,17.279196977615356,2.4000000000000004,24
+Knowledge Graph RAG,5,Graph Search,35.99951672554016,2.4000000000000004,24
+Knowledge Graph RAG,6,Hybrid Search,0.0,0.0,486
+Knowledge Graph RAG,7,Hybrid Search,15.354910850524902,2.4000000000000004,24
+Knowledge Graph RAG,8,Hybrid Search,52.2300488948822,416.5,3665
+Knowledge Graph RAG,9,Complex Analysis,27.535503149032593,2.4000000000000004,24
+Knowledge Graph RAG,10,Complex Analysis,35.0321249961853,2.4000000000000004,24
+Knowledge Graph RAG,11,Complex Analysis,38.50056481361389,2.4000000000000004,24
